@@ -234,8 +234,8 @@ class BioNetwork(SimNetwork):
                 source_population = edge_pop.source_nodes
                 for trg_nid, trg_cell in self._rank_node_ids[edge_pop.target_nodes].items():
                     for edge in edge_pop.get_target(trg_nid):
-                        src_cell = self._rank_node_ids[edge_pop.source_nodes][edge.source_node_id]
                         src_node = self.get_node_id(source_population, edge.source_node_id)
+                        src_cell = pc.gid2cell(src_node.gid)
                         trg_cell.set_syn_connection(edge, src_node, src_cell=src_cell, gj_id_gen=self._gap_junc_id_gen)
 
             elif edge_pop.mixed_connections:

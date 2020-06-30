@@ -212,7 +212,7 @@ class BioCell(Cell):
                 return self._set_connections(edge_prop, src_node, syn_weight, stim)
 
     def _set_gap_junc_preselected(self, edge_prop, src_cell, syn_weight, gj_id_gen, src_node):
-        if src_cell.node_id == self.node_id:
+        if src_node.gid == self.gid:
             raise Exception("A cell cannot have a gap junction with itself.")
         if edge_prop.nsyns < 1:
             return 1
@@ -225,13 +225,13 @@ class BioCell(Cell):
         gj_id2 = gj_id_gen.next()
 
         #Sets up the sections to be connected to the gap junctions.
-        pc.source_var(src_cell.hobj.soma[0](0.5)._ref_v, gj_id1, sec=src_cell.hobj.soma[0])
+        pc.source_var(src_cell.soma[0](0.5)._ref_v, gj_id1, sec=src_cell.soma[0])
         pc.source_var(section(0.5)._ref_v, gj_id2, sec=section)
 
         #Creates gap junctions on both cells.
         try:
             gap_junc1 = h.Gap(0.5, sec=section)
-            gap_junc2 = h.Gap(0.5, sec=src_cell.hobj.soma[0])
+            gap_junc2 = h.Gap(0.5, sec=src_cell.soma[0])
         except:
             raise Exception("You need the gap.mod file to create gap junctions.")
 
@@ -249,19 +249,18 @@ class BioCell(Cell):
         self._edge_type_ids.append(edge_prop.edge_type_id)
 
         if self._save_conn:
-            self._save_connection(src_gid=src_cell.node_id, src_net=src_cell.network_name, sec_x=sec_x, seg_ix=sec_id,
+            self._save_connection(src_gid=src_node.gid, src_net=src_node.network, sec_x=sec_x, seg_ix=sec_id,
                                   edge_type_id=edge_prop.edge_type_id)
 
         return 1
 
     def _set_gap_junc(self, edge_prop, src_cell, syn_weight, gj_id_gen, src_node):
-        if src_cell.node_id == self.node_id:
+        if src_node.gid == self.gid:
             raise Exception("A cell cannot have a gap junction with itself.")
         if edge_prop.nsyns < 1:
             return 1
 
         tar_seg_ix, tar_seg_prob = self._morph.get_target_segments(edge_prop)
-        src_gid = src_cell.node_id
         nsyns = 1
 
         # choose nsyn elements from seg_ix with probability proportional to segment area
@@ -276,13 +275,13 @@ class BioCell(Cell):
         gj_id2 = gj_id_gen.next()
 
         #Sets up the sections to be connected to the gap junctions.
-        pc.source_var(src_cell.hobj.soma[0](0.5)._ref_v, gj_id1, sec=src_cell.hobj.soma[0])
+        pc.source_var(src_cell.soma[0](0.5)._ref_v, gj_id1, sec=src_cell.soma[0])
         pc.source_var(sec(0.5)._ref_v, gj_id2, sec=sec)
 
         #Creates gap junctions on both cells.
         try:
             gap_junc1 = h.Gap(0.5, sec=sec)
-            gap_junc2 = h.Gap(0.5, sec=src_cell.hobj.soma[0])
+            gap_junc2 = h.Gap(0.5, sec=src_cell.soma[0])
         except:
             raise Exception("You need the gap.mod file to create gap junctions.")
 
@@ -300,7 +299,7 @@ class BioCell(Cell):
         self._edge_type_ids.append(edge_prop.edge_type_id)
 
         if self._save_conn:
-            self._save_connection(src_gid=src_cell.node_id, src_net=src_cell.network_name, sec_x=x, seg_ix=sec_ix,
+            self._save_connection(src_gid=src_node.gid, src_net=src_node.network, sec_x=x, seg_ix=sec_ix,
                                   edge_type_id=edge_prop.edge_type_id)
 
     def _set_connection_preselected(self, edge_prop, src_node, syn_weight, stim=None):
