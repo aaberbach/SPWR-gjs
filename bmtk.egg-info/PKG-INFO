@@ -51,7 +51,7 @@ Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
 Description-Content-Type: text/markdown
-Provides-Extra: bionet
 Provides-Extra: popnet
-Provides-Extra: pointnet
+Provides-Extra: bionet
 Provides-Extra: mintnet
+Provides-Extra: pointnet

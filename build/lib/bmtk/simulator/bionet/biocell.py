@@ -185,22 +185,22 @@ class BioCell(Cell):
 
         self._secs = np.array(secs)
 
-    def set_syn_connection(self, edge_prop, src_node, stim=None, net=None, gj_id_gen=None):
+    def set_syn_connection(self, edge_prop, src_node, stim=None, src_cell=None, gj_id_gen=None):
         syn_weight = edge_prop.syn_weight(src_node=src_node, trg_node=self._node)
 
         if edge_prop.is_gap_junction:
             if gj_id_gen == None:
                 raise AttributeError("There must be an id generator for gap junctions.")
-            if net == None:
-                raise AttributeError("The network must be passed in for gap junctions.")
+            if src_cell == None:
+                raise AttributeError("The source cell must be passed in for gap junctions.")
 
             self._edge_props.append(edge_prop)
             self._src_gids.append(src_node.node_id)
 
             if edge_prop.preselected_targets:
-                return self._set_gap_junc_preselected(edge_prop, net.get_cell_gid(src_node.gid), syn_weight, gj_id_gen, src_node=src_node)
+                return self._set_gap_junc_preselected(edge_prop, src_cell, syn_weight, gj_id_gen, src_node=src_node)
             else:
-                return self._set_gap_junc(edge_prop, net.get_cell_gid(src_node.gid), syn_weight, gj_id_gen, src_node=src_node)
+                return self._set_gap_junc(edge_prop, src_cell, syn_weight, gj_id_gen, src_node=src_node)
         else:
             if edge_prop.preselected_targets:
                 self._edge_props.append(edge_prop)
